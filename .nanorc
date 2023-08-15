@@ -1,0 +1,69 @@
+include /usr/share/nano/sh.nanorc
+include /usr/share/nano/nanorc.nanorc
+include /usr/share/nano/c.nanorc
+include /usr/share/nano/makefile.nanorc
+
+set afterends
+set autoindent
+set historylog
+set indicator
+set jumpyscrolling
+set showcursor
+set smarthome
+set tabsize 2
+set trimblanks
+set zap
+set minibar
+#set markmatch
+
+bind ^Space mark all
+unbind ^P all
+bind ^P center all
+bind M-; center all
+unbind ^H all
+#bind ^H #set this to mark all...
+
+#unbind M-O all #doesn't work
+#bind M-O prevword all #doesn't work, now char instead
+#unbind M-I all #doesn't work
+#bind M-I nextword all #doesn't work
+unbind ^G all
+bind ^G cancel all
+unbind ^G main
+bind ^G gotoline main
+unbind ^A all
+bind ^A backspace all
+unbind ^D all
+bind ^D delete all
+
+unbind ^Z all
+bind ^Z undo all
+unbind M-Z all
+bind M-Z redo all
+
+unbind ^F all
+bind ^F whereis all
+unbind ^R all
+bind ^R replace all
+unbind M-T all
+bind M-T wherewas all
+unbind Sh-M-T all
+unbind Sh-M-F all
+bind ^F "[A" search #commit, reopen whereis, recall
+bind M-T "t[A" search #commit, reopen wherewas, recall
+bind Sh-M-T findnext all
+bind Sh-M-F findprevious all
+
+unbind ^W all
+bind ^W cut all
+unbind M-W all
+bind M-W copy all
+unbind ^E all
+bind ^E paste all
+
+unbind ^S all
+bind ^S savefile all
+unbind ^/ main
+bind ^/ nohelp main
+unbind ^B main
+bind ^B insert main
