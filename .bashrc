@@ -59,7 +59,7 @@ case $TERM in
 		}
 		PS1=""
 		PS1+="`esc ']0;\u: \w\a'       `" # set window title
-		PS1+="`esc '[0;4;38;5;22m' '${debian_chroot:+($debian_chroot)}'`" # reset attributes, underline, dark blue.
+		PS1+="`esc '[0;;38;5;22m' '${debian_chroot:+($debian_chroot)}'`" # reset attributes, underline, dark blue.
 		PS1+="`esc '[1;34m'        '\w'`" # bold, blue.  Current Path
 		PS1+="`esc '[39;22m'       '>' `" # reset color, reset bold.  ">"
 		PS1+="`esc '[m'            ' ' `" # reset attribytes.  Space
@@ -89,6 +89,7 @@ fi
 # colored GCC warnings and errors
 export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
 # nicer LS colors
+# TODO: where does this come from?
 eval "$(dircolors /etc/dircolors.ansi-dark)"
 
 # Alias definitions.
@@ -109,7 +110,8 @@ fi
 
 # terminal settings
 export COLORTERM=truecolor
-export TERM=ms-terminal
+# definition not in debian 12
+#export TERM=ms-terminal
 
 export DISPLAY=$(awk '/nameserver / {print $2; exit}' /etc/resolv.conf 2>/dev/null):0
 #export XDG_RUNTIME_DIR=~/
