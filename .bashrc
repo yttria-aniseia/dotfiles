@@ -46,38 +46,44 @@ if [ -n "$force_color_prompt" ]; then
     fi
 fi
 
-case $TERM in
-	xterm*)
-		function git_branch {
-			if [ -f ~/.__git_branch ]; then
-				local branch="`~/.__git_branch`"
-				branch="${branch##ref: refs/heads/}"
-			fi
-		}
-		function esc {
-			echo "\[\e$1\]$2"
-		}
-		PS1=""
-		PS1+="`esc ']0;\u: \w\a'       `" # set window title
-		PS1+="`esc '[0;;38;5;22m' '${debian_chroot:+($debian_chroot)}'`" # reset attributes, underline, dark blue.
-		PS1+="`esc '[1;34m'        '\w'`" # bold, blue.  Current Path
-		PS1+="`esc '[39;22m'       '>' `" # reset color, reset bold.  ">"
-		PS1+="`esc '[m'            ' ' `" # reset attribytes.  Space
-		unset -f esc
+# PROMPT
+function git_branch {
+        if [ -f ~/.__git_branch ]; then
+                local branch="`~/.__git_branch`"
+                branch="${branch##ref: refs/heads/}"
+                if [ $branch ]; then
+                        if [[ $branch -eq "master" || $branch -eq "main" ]]; then
+                                branch=""
+                        fi
+                        echo "(${branch}) "
+                fi
+        fi
+}
+function esc {
+        echo "\[\e$1\]$2"
+}
+PS1=""
+PS1+="`esc ']0;\u: \w\a'       `" # set window title
+PS1+="`esc '[0;;38;5;22m' '$(git_branch)${debian_chroot:+($debian_chroot)}'`" # reset attributes, underline, dark blue.
+PS1+="`esc '[1;34m'        '\w'`" # bold, blue.  Current Path
+PS1+="`esc '[39;22m'       '>' `" # reset color, reset bold.  ">"
+PS1+="`esc '[m'            ' ' `" # reset attribytes.  Space
+unset -f esc
 
-		# magic function which prints a newline before printing prompt
-		# if the cursor is not at the start of the row
-		if [ "`tput u6`" = $'\e[%i%d;%dR' ]
-		then
-			PROMPT_COMMAND=_my_prompt_command
-			function _my_prompt_command {
-				local curpos
-				IFS=';' read -p"`tput u7`" -d'R' -s -t5 _ curpos
-				((curpos!=1)) && echo
-				tput sgr0 el #reset colors, clear row
-			}
-		fi
-esac
+# magic function which prints a newline before printing prompt
+# if the cursor is not at the start of the row
+if [ "`tput u6`" = $'\e[%i%d;%dR' ]
+then
+        PROMPT_COMMAND=_my_prompt_command
+        function _my_prompt_command {
+                local curpos
+                IFS=';' read -p"`tput u7`" -d'R' -s -t5 _ curpos
+                ((curpos!=1)) && echo
+                tput sgr0 el #reset colors, clear row
+        }
+fi
+# END PROMPT
+
 
 # enable color support of ls and also add handy aliases
 if [ -x /usr/bin/dircolors ]; then
