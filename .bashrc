@@ -110,8 +110,8 @@ fi
 
 # terminal settings
 export COLORTERM=truecolor
-# definition not in debian 12
-#export TERM=ms-terminal
+# definition not in debian 12 minimal, make sure *_setup installs
+export TERM=ms-terminal
 
 export DISPLAY=$(awk '/nameserver / {print $2; exit}' /etc/resolv.conf 2>/dev/null):0
 #export XDG_RUNTIME_DIR=~/

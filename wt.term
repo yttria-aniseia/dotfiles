@@ -1,0 +1,15 @@
+ms-terminal|Windows 10 terminal,
+# no margins
+	mgc@, smglr@,
+# apparently insert mode doesn't work yet
+	smir@, rmir@,
+# emacs direct color capabilities (tested)
+# note that windows terminal uses semicolons (this is incorrect, but very common) instead of colons
+	setf24=\E[38;2;%p1%{65536}%/%d;%p1%{256}%/%{255}%&%d;%p1%{255}%&%dm,
+	setb24=\E[48;2;%p1%{65536}%/%d;%p1%{256}%/%{255}%&%d;%p1%{255}%&%dm,
+# cursor style (tested)
+	Se=\E[2 q, Ss=\E[%p1%d q,
+# allow setting window title (tested)
+	use=xterm+sl,
+# base xterm
+	use=xterm-256color,

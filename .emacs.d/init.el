@@ -84,22 +84,6 @@
 ;		  'wt-emacs-mode-enter)
 
 
-(defvar bootstrap-version)
-(let ((bootstrap-file
-       (expand-file-name "straight/repos/straight.el/bootstrap.el" 	user-emacs-directory))
-      (bootstrap-version 5))
-  (unless (file-exists-p bootstrap-file)
-	(with-current-buffer
-		(url-retrieve-synchronously
-		 "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
-		 'silent 'inhibit-cookies)
-	  (goto-char (point-max))
-	        (eval-print-last-sexp)))
-  (load bootstrap-file nil 'nomessage))
-
-(setq straight-use-package-by-default t)
-(straight-use-package 'use-package)
-
 ;; global variable config
 (setq echo-keystrokes 0.1               ; Show keystrokes asap
       inhibit-startup-screen t          ; No splash screen please
@@ -163,20 +147,20 @@ located.")
 
 
 ;; packages
-(when (straight-use-package 'so-long nil :noerror)
+(when (use-package 'so-long nil :noerror)
   (global-so-long-mode 1)
   ;; Basic settings.
   (setq so-long-action 'so-long-minor-mode)
   (setq so-long-threshold 1000)
       (setq so-long-max-lines 100))
 
-(straight-use-package 'magit)
+(use-package 'magit)
 
-(straight-use-package 'paren)
-(straight-use-package 'flycheck
+(use-package 'paren)
+(use-package 'flycheck
 					  :defer t)
 
-(straight-use-package 'flymake
+(use-package 'flymake
 					  :defer t)
 
 
@@ -200,7 +184,7 @@ located.")
 ;;   :straight (tree-sitter-langs :host github
 ;; 							   :repo "ubolonton/emacs-tree-sitter"
 ;; 							   :files ("langs/*.el" "langs/queries")))
-;;(straight-use-package 'tree-sitter-langs)
+;;(use-package 'tree-sitter-langs)
 
 ;; tab bar: show after creating tabs
 (setq tab-bar-show t)
@@ -248,13 +232,13 @@ located.")
 ;(add-hook 'elpy-mode-hook 'py-autopep8-enable-on-save)
 
 ;;; c/c++
-;(straight-use-package 'google-c-style)
+;(use-package 'google-c-style)
 (defun cc-mode-init ()
   (c-turn-on-eldoc-mode)
   )
 (add-hook 'c++-mode-hook 'cc-mode-init)
 (setq c-default-style "awk")
-(straight-use-package 'modern-cpp-font-lock)
+(use-package 'modern-cpp-font-lock)
 
 ;; c modes
 (defun c-setup ()
@@ -263,18 +247,18 @@ located.")
 (add-hook 'c-mode-hook 'c-setup)
 
 ;; ;;; c#
-;; (straight-use-package 'omnisharp :defer t)
+;; (use-package 'omnisharp :defer t)
 
 ;;; rust
-(straight-use-package 'rust-mode :defer t)
+(use-package 'rust-mode :defer t)
 
 ;;; org
-(straight-use-package 'org :defer t)
+(use-package 'org :defer t)
 ;; ;;;plant-uml
-;; (straight-use-package 'plantuml-mode :defer t)
+;; (use-package 'plantuml-mode :defer t)
 
 ;;;pair programming mode https://github.com/Floobits/floobits-emacs
-;(straight-use-package 'floobits)
+;(use-package 'floobits)
 
 ;;; keys??
 (define-key function-key-map "\e[1;5D" (kbd "<C-left>"))
@@ -387,7 +371,7 @@ located.")
 (global-so-long-mode 1)
 (column-number-mode 1)
 (show-paren-mode 1)
-(straight-use-package 'which-key)
+(use-package 'which-key)
   (which-key-mode 1)
 ;(defalias 'yes-or-no-p 'y-or-n-p)
 
