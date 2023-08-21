@@ -129,6 +129,9 @@ export DTK_PROGRAM=espeak
 # use homedir (encryption support) tmp
 export TMPDIR=$HOME/tmp
 
+# gpg needs to display a passkey prompt for signing
+export GPG_TTY=$(tty)
+
 # wt fast emacs
 alias emacs='emacsclient -a "" -c'
 export EDITOR=emacs
