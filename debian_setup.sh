@@ -52,9 +52,25 @@ function install_micromamba () {
 	source ~/.bashrc
 }
 
-add_deb_src
-install_basic
-add_terminfo
-shell_config
-install_emacs_29
-install_micromamba
+# install nextflow
+function install_nextflow () {
+	# adoptium temurin/openjdk
+	sudo apt install apt-transport-https
+	wget -O - https://packages.adoptium.net/artifactory/api/gpg/key/public | sudo tee /etc/apt/keyrings/adoptium.asc
+	echo "deb [signed-by=/etc/apt/keyrings/adoptium.asc] https://packages.adoptium.net/artifactory/deb $(awk -F= '/^VERSION_CODENAME/{print$2}' /etc/os-release) main" | sudo tee /etc/apt/sources.list.d/adoptium.list
+	sudo apt update
+	# adoptium-ca-certificates alsa-topology-conf alsa-ucm-conf fonts-dejavu-extra java-common libasound2 libasound2-data libxi6 libxrender1 libxtst6 p11-kit p11-kit-modules temurin-17-jdk x11-common
+	sudo apt install temurin-17-jdk
+	wget -qO- https://get.nextflow.io | bash
+	chmod +rx nextflow
+	sudo mv nextflow /usr/local/bin
+	# note: nextflow self-update won't work because /usr/local/bin is restricted and if we run as su we change nextflow bin permissions
+}
+
+#add_deb_src
+#install_basic
+#add_terminfo
+#shell_config
+#install_emacs_29
+#install_micromamba
+install_nextflow
