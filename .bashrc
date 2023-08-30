@@ -48,16 +48,16 @@ fi
 
 # PROMPT
 function git_branch {
-        if [ -f ~/.__git_branch ]; then
-                local branch="`~/.__git_branch`"
-                branch="${branch##ref: refs/heads/}"
-                if [ $branch ]; then
-                        if [[ $branch -eq "master" || $branch -eq "main" ]]; then
-                                branch=""
-                        fi
-                        echo "(${branch}) "
-                fi
-        fi
+	if [ -f ~/.__git_branch ]; then
+		local branch="`~/.__git_branch`"
+		branch="${branch##ref: refs/heads/}"
+		if [ $branch ]; then
+			if [[ $branch == "master" || $branch == "main" ]]; then
+				branch=""
+			fi
+			echo "(${branch}) "
+		fi
+	fi
 }
 function esc {
         echo "\[\e$1\]$2"
