@@ -3,8 +3,9 @@
 # for examples
 
 # free cache  !!
-#echo "confirm elevated drop cache:"
-#sudo sh -c "sync; echo 1 > /proc/sys/vm/drop_caches"
+function drop-cache {
+	sudo sh -c "sync; echo 1 > /proc/sys/vm/drop_caches"
+}
 
 # If not running interactively, don't do anything
 case $- in
@@ -24,12 +25,6 @@ shopt -s globstar
 
 # make less more friendly for non-text input files, see lesspipe(1)
 #[ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
-
-# set variable identifying the chroot you work in (used in the prompt below)
-#if [ -z "${debian_chroot:-}" ] && [ -r /etc/debian_chroot ]; then
-#    debian_chroot=$(cat /etc/debian_chroot)
-#fi
-# ${debian_chroot:+($debian_chroot)}
 
 # set a fancy prompt (non-color, unless we know we "want" color)
 color_prompt=yes
@@ -60,7 +55,7 @@ function git_branch {
 	fi
 }
 function esc {
-        echo "\[\e$1\]$2"
+	echo "\[\e$1\]$2"
 }
 PS1=""
 PS1+="`esc ']0;\u: \w\a'       `" # set window title
@@ -74,16 +69,15 @@ unset -f esc
 # if the cursor is not at the start of the row
 if [ "`tput u6`" = $'\e[%i%d;%dR' ]
 then
-        PROMPT_COMMAND=_my_prompt_command
-        function _my_prompt_command {
-                local curpos
-                IFS=';' read -p"`tput u7`" -d'R' -s -t5 _ curpos
-                ((curpos!=1)) && echo
-                tput sgr0 el #reset colors, clear row
-        }
+	PROMPT_COMMAND=_my_prompt_command
+	function _my_prompt_command {
+		local curpos
+		IFS=';' read -p"`tput u7`" -d'R' -s -t5 _ curpos
+		((curpos!=1)) && echo
+		tput sgr0 el #reset colors, clear row
+	}
 fi
 # END PROMPT
-
 
 # enable color support of ls and also add handy aliases
 if [ -x /usr/bin/dircolors ]; then
@@ -95,8 +89,7 @@ fi
 # colored GCC warnings and errors
 export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
 # nicer LS colors
-# TODO: where does this come from?
-eval "$(dircolors /etc/dircolors.ansi-dark)"
+#eval "$(dircolors /etc/dircolors.ansi-dark)"
 
 # Alias definitions.
 if [ -f ~/.bash_aliases ]; then
@@ -116,7 +109,6 @@ fi
 
 # terminal settings
 export COLORTERM=truecolor
-# definition not in debian 12 minimal, make sure *_setup installs
 export TERM=ms-terminal
 
 export DISPLAY=$(awk '/nameserver / {print $2; exit}' /etc/resolv.conf 2>/dev/null):0
@@ -129,18 +121,21 @@ export DTK_PROGRAM=espeak
 # use homedir (encryption support) tmp
 export TMPDIR=$HOME/tmp
 
-# gpg needs to display a passkey prompt for signing
+# gpg needs a tty to sign anything
 export GPG_TTY=$(tty)
 
+export LSP_USE_PLISTS=true
+
 # wt fast emacs
-alias emacs='emacsclient -a "" -c'
+unalias emacs
+# start emacs server if not already running
+if [ $(emacsclient -a false -e '(+ 1 0)') ]
+then echo 'emacs already running'
+else emacs --daemon
+fi
+alias emacs='emacsclient -a "" -t'
 export EDITOR=emacs
 
-# start emacs server if not already running
-if [ $(emacsclient -a false -e 't') ]
-then echo 'emacs already running'
-else emacsclient -a "" -c -e '(delete-frame)'
-fi
 
 # add some program locations to path
 if [[ -n "$IS_WSL" || -n "$WSL_DISTRO_NAME" ]]; then
@@ -148,3 +143,16 @@ if [[ -n "$IS_WSL" || -n "$WSL_DISTRO_NAME" ]]; then
 fi
 # rust installed programs
 PATH="~/.cargo/bin:$PATH"; export PATH
+
+# >>> mamba initialize >>>
+# !! Contents within this block are managed by 'mamba init' !!
+export MAMBA_EXE='/home/ywy/src/dotfiles/bin/micromamba';
+export MAMBA_ROOT_PREFIX='/home/ywy/micromamba';
+__mamba_setup="$("$MAMBA_EXE" shell hook --shell bash --root-prefix "$MAMBA_ROOT_PREFIX" 2> /dev/null)"
+if [ $? -eq 0 ]; then
+    eval "$__mamba_setup"
+else
+    alias micromamba="$MAMBA_EXE"  # Fallback on help from mamba activate
+fi
+unset __mamba_setup
+# <<< mamba initialize <<<
